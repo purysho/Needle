@@ -1,30 +1,41 @@
 <div align="center">
-  <img src="assets/icon.svg" width="140" alt="Needle icon">
+  <img src="assets/icon.png" width="132" alt="Needle icon">
   <h1>Needle</h1>
   <p><strong>A private local search engine for indexing, finding, browsing, and opening files on your computer.</strong></p>
+  <p>
+    <a href="https://github.com/purysho/Needle/actions/workflows/ci.yml"><img alt="CI" src="https://github.com/purysho/Needle/actions/workflows/ci.yml/badge.svg"></a>
+    <a href="https://github.com/purysho/Needle/releases"><img alt="Releases" src="https://img.shields.io/github/v/release/purysho/Needle?display_name=tag&sort=semver"></a>
+    <a href="LICENSE"><img alt="MIT" src="https://img.shields.io/badge/license-MIT-202832.svg"></a>
+  </p>
+  <p><a href="https://github.com/purysho/Needle/releases"><strong>Download for Windows</strong></a> · <a href="#run-from-source">Run from source</a> · <a href="https://github.com/purysho/Needle/issues">Report an issue</a></p>
 </div>
 
-Needle builds a lightweight local index over folders you choose and lets you search that index from a Windows desktop interface. It is designed for fast personal file discovery without sending your filenames or content to a hosted search service.
+![Needle desktop interface preview](docs/interface-preview.svg)
 
-## Features
+## What it does
 
 - Build and update local file indexes
-- Search indexed files quickly
-- Browse all indexed files of an extension with a blank query
-- Open files directly from results
-- Reveal files in the system file manager
-- Read existing WSL-style `/mnt/c/...` paths used by compatible indexes
-- Local HTTP server module for alternative integrations
+- Fast filename and content search
+- Exact-phrase and typo-tolerant search
+- Browse indexed files by extension
+- Open or reveal results directly
+- Portable local JSON indexes
+
+## Download
+
+Tagged releases are built on `windows-latest` by GitHub Actions. Each release contains `Needle.exe` and `Needle.exe.sha256`. The executable is produced from the source at that tag with PyInstaller.
+
+> Until the first tagged release is published, the latest Windows build is available as the **Needle-windows** artifact on successful CI runs.
 
 ## Run from source
 
-Requirements: Windows and Python 3.10+.
+Requirements: Python 3.10+ with Tk support.
 
 ```powershell
 pyw needle_desktop.pyw
 ```
 
-Needle uses Python's standard library and Tkinter; there are no third-party runtime dependencies.
+The application uses Python's standard library at runtime.
 
 ## Build a standalone Windows executable
 
@@ -38,27 +49,20 @@ Output:
 dist\Needle.exe
 ```
 
-## Project structure
-
-```text
-Needle/
-├── needle/
-│   ├── indexer.py       # indexing and search engine
-│   └── server.py        # optional local HTTP server
-├── needle_desktop.pyw   # Tkinter desktop interface
-├── build-windows.ps1
-├── assets/
-└── .github/workflows/
-```
-
 ## Privacy
 
-Needle is local-first. Index creation and searching happen on the user's machine. The desktop application does not need an external account or cloud search backend.
+Index creation and searching happen locally. Needle does not need a hosted search service or account.
 
-## Current scope
+## Scope
 
-Needle is aimed at personal/local file search rather than enterprise document management. Search quality is intentionally lightweight and deterministic.
+Needle targets personal/local file discovery rather than enterprise document management. Search is deliberately lightweight and deterministic.
 
-## Status
+## Release process
 
-V1.1 — local indexing, searching, browsing, file opening, and Windows desktop packaging.
+- Every push runs tests/compile checks and builds a Windows executable artifact.
+- Tags matching `v*` build the executable again, compute SHA256, and publish both files to GitHub Releases.
+- See [CHANGELOG.md](CHANGELOG.md) for release history.
+
+## License
+
+MIT
