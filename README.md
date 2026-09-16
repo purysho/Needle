@@ -1,5 +1,5 @@
 <div align="center">
-  <img src="assets/icon.png" width="140" alt="Needle icon">
+  <img src="assets/icon.svg" width="140" alt="Needle icon">
   <h1>Needle</h1>
   <p><strong>A private local search engine for indexing, finding, browsing, and opening files on your computer.</strong></p>
 </div>
