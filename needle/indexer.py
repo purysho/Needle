@@ -50,6 +50,29 @@ def tokenize(text: str) -> list[str]:
     return [m.group(0).lower() for m in TOKEN_RE.finditer(text)]
 
 
+def _decode(raw: bytes) -> str | None:
+    """Decode file bytes as text, or return None for binary data.
+
+    UTF-16 is only trusted with a byte-order mark: almost any even-length byte
+    string "decodes" as UTF-16, which would turn Windows-1252 text into noise,
+    and UTF-16 text is full of NUL bytes, so the BOM check runs before the
+    binary check.
+    """
+    if raw.startswith((b"\xff\xfe", b"\xfe\xff")):
+        try:
+            return raw.decode("utf-16")
+        except UnicodeDecodeError:
+            return None
+    if b"\x00" in raw[:4096]:
+        return None
+    for enc in ("utf-8-sig", "cp1252", "latin-1"):
+        try:
+            return raw.decode(enc)
+        except UnicodeDecodeError:
+            pass
+    return None
+
+
 def _read_text(path: Path, max_bytes: int = 4_000_000) -> str | None:
     try:
         st = path.stat()
@@ -57,14 +80,7 @@ def _read_text(path: Path, max_bytes: int = 4_000_000) -> str | None:
             return None
         with path.open("rb") as fh:
             raw = fh.read()
-        if b"\x00" in raw[:4096]:
-            return None
-        for enc in ("utf-8", "utf-8-sig", "utf-16", "latin-1"):
-            try:
-                return raw.decode(enc)
-            except UnicodeDecodeError:
-                pass
-        return None
+        return _decode(raw)
     except (OSError, PermissionError):
         return None
 
@@ -189,17 +205,7 @@ class SearchIndex:
                 stats.skipped += 1
                 continue
 
-            if b"\x00" in raw[:4096]:
-                stats.skipped += 1
-                continue
-
-            text = None
-            for enc in ("utf-8", "utf-8-sig", "utf-16", "latin-1"):
-                try:
-                    text = raw.decode(enc)
-                    break
-                except UnicodeDecodeError:
-                    pass
+            text = _decode(raw)
             if text is None:
                 stats.skipped += 1
                 continue

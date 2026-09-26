@@ -2,6 +2,15 @@
 
 All notable changes to Needle are documented here.
 
+## [1.2.1] - 2026-09-26
+
+### Fixed
+- UTF-16 text files (common on Windows) were skipped as binary.
+- Windows-1252 and Latin-1 files of even length were decoded as UTF-16 and indexed as noise. UTF-16 is now used only when the file starts with a byte-order mark.
+
+### Added
+- Behavioural tests covering the areas above and the rest of the core.
+
 ## [1.2.0] - 2026-09-26
 
 ### Added
