@@ -1,36 +1,51 @@
 name: Bug report
-description: Report a reproducible problem in Needle
+description: Something is not working as described
 title: "[Bug]: "
 labels: ["bug"]
 body:
+  - type: input
+    id: os
+    attributes:
+      label: Operating system
+      placeholder: "Windows 10/11, macOS version, or Linux distro"
+    validations:
+      required: true
+  - type: input
+    id: version
+    attributes:
+      label: Version
+      description: The release tag you downloaded, or the commit if running from source.
+  - type: dropdown
+    id: run-method
+    attributes:
+      label: Run method
+      options:
+        - Downloaded release
+        - Run from source
+    validations:
+      required: true
   - type: textarea
     id: problem
     attributes:
-      label: What happened?
-      description: Describe the problem and what you expected instead.
+      label: What happened
+    validations:
+      required: true
+  - type: textarea
+    id: expected
+    attributes:
+      label: What you expected
     validations:
       required: true
   - type: textarea
     id: reproduce
     attributes:
       label: Steps to reproduce
-      placeholder: "1. Open…
-2. Click…
-3. Observe…"
-    validations:
-      required: true
-  - type: input
-    id: version
-    attributes:
-      label: Version / commit
-  - type: input
-    id: os
-    attributes:
-      label: Operating system
+      placeholder: "1. \n2. \n3. "
     validations:
       required: true
   - type: textarea
     id: logs
     attributes:
-      label: Relevant output
+      label: Logs or screenshots
+      description: "Status-bar message or traceback. Remove tokens, passwords and private paths first."
       render: text

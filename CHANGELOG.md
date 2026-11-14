@@ -1,6 +1,17 @@
 # Changelog
 
 All notable changes to Needle are documented here.
+Format: [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
+
+## [Unreleased]
+
+### Added
+- `CONTRIBUTING.md`, `docs/ARCHITECTURE.md`, `docs/V1_RELEASE_CHECKLIST.md` and `docs/RECORDING_GUIDE.md`.
+- README: a comparison with the well-known alternatives, and links to the rest of the Depot suite.
+
+### Changed
+- `SECURITY.md` now states supported versions, response times and the threat model.
+- The bug report form asks for the run method and the expected behaviour.
 
 ## [1.2.1] - 2026-09-26
 
