@@ -41,6 +41,17 @@ class NeedleBehaviourTests(unittest.TestCase):
         self.put('recovery.md', 'recovery notes'); self.put('other.md', 'recovery notes'); idx = self._built()
         self.assertEqual(self.names(idx, 'recovery')[0], 'recovery.md')
 
+    def test_limited_search_keeps_full_ranking_and_tie_order(self):
+        for name, text in [('z.txt', 'needle needle'), ('b.txt', 'needle'),
+                           ('A.txt', 'needle'), ('c.md', 'needle'), ('d.txt', 'needle')]:
+            self.put(name, text)
+        idx = self._built()
+        full = idx.search('needle', limit=None)['results']
+        for limit in (0, 1, 2, 4, 20):
+            self.assertEqual(idx.search('needle', limit=limit)['results'], full[:limit])
+        filtered = idx.search('needle', ext='.txt', limit=None)['results']
+        self.assertEqual(idx.search('needle', ext='.txt', limit=2)['results'], filtered[:2])
+
     def test_hidden_ignored_binary_and_unknown_files_are_skipped(self):
         self.put('ok.txt', 'findme'); self.put('.hidden/x.txt', 'findme'); self.put('node_modules/p/x.js', 'findme')
         self.put('blob.txt', data=b'\x00\x01findme'); self.put('image.png', 'findme')
