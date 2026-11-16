@@ -3,6 +3,7 @@ from dataclasses import dataclass
 from pathlib import Path
 from collections import Counter, defaultdict
 import difflib
+import heapq
 import json
 import math
 import os
@@ -378,9 +379,13 @@ class SearchIndex:
             coverage = len(matched_terms[doc_id]) / unique_requested
             scores[doc_id] *= 0.75 + 0.5 * min(coverage, 1.0)
 
-        ranked = sorted(scores.items(), key=lambda x: (-x[1], self.data["docs"][x[0]]["path"].lower()))
-        if limit is not None:
-            ranked = ranked[:limit]
+        rank_key = lambda x: (-x[1], self.data["docs"][x[0]]["path"].lower())
+        if limit is not None and limit > 0:
+            ranked = heapq.nsmallest(limit, scores.items(), key=rank_key)
+        else:
+            ranked = sorted(scores.items(), key=rank_key)
+            if limit is not None:
+                ranked = ranked[:limit]
 
         results = []
         snippet_terms = list(dict.fromkeys(qtokens))
